@@ -23,18 +23,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Lint
-        run: npm run lint
+        run: yarn lint
 
       - name: Typecheck
-        run: npx tsc --noEmit
+        run: yarn tsc --noEmit
 
       - name: Build
         env:
           NEXT_PUBLIC_API_BASE_URL: https://example.com
-        run: npm run build
+        run: yarn build
