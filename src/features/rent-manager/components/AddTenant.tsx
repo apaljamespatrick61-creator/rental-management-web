@@ -14,7 +14,7 @@ interface AddTenantProps {
   tenant?: {
     id: string;
     name: string;
-    email_address: string;
+    email: string;
     unit: string;
     monthly_rent: number;
     phone_number: string;
@@ -23,6 +23,7 @@ interface AddTenantProps {
 }
 
 const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
+  console.log("tenant", tenant);
   const {
     register,
     handleSubmit,
@@ -33,7 +34,7 @@ const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
     defaultValues: tenant
       ? {
           name: tenant.name,
-          email_address: tenant.email_address,
+          email: tenant.email,
           unit: tenant.unit,
           monthly_rent: String(tenant.monthly_rent),
           phone_number: tenant.phone_number,
@@ -76,7 +77,7 @@ const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
     if (tenant) {
       reset({
         name: tenant.name,
-        email_address: tenant.email_address,
+        email: tenant.email,
         unit: tenant.unit,
         monthly_rent: String(tenant.monthly_rent),
         phone_number: tenant.phone_number,
@@ -109,19 +110,20 @@ const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
               )}
             </div>
             <div>
-              <label htmlFor="email-address" className="font-semibold">
+              <label htmlFor="email" className="font-semibold">
                 Email Address
               </label>
               <input
-                id="email-address"
+                id="email"
                 type="email"
                 placeholder="Email Address"
                 className="w-full p-2 border border-gray-300 rounded"
-                {...register("email_address")}
-                defaultValue={tenant?.email_address}
+                {...register("email")}
+                defaultValue={tenant?.email}
+                disabled={!!tenant?.email}
               />
-              {errors.email_address && (
-                <p className="text-red-500 text-sm">{errors.email_address.message}</p>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
             <div>
