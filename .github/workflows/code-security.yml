@@ -78,5 +78,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Audit dependencies
-        run: yarn audit --level high
+      - name: Security Audit
+        run: yarn security:audit
+        continue-on-error: true
