@@ -14,6 +14,7 @@ interface AddTenantProps {
   tenant?: {
     id: string;
     name: string;
+    email_address: string;
     unit: string;
     monthly_rent: number;
     phone_number: string;
@@ -29,17 +30,22 @@ const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
     formState: { errors },
   } = useForm<AddTenantFormValues>({
     resolver: zodResolver(addTenantSchema),
-    defaultValues: tenant ? {
-      name: tenant.name,
-      unit: tenant.unit,
-      monthly_rent: String(tenant.monthly_rent),
-      phone_number: tenant.phone_number,
-      lease_start_date: tenant.lease_start_date,
-    } : undefined
+    defaultValues: tenant
+      ? {
+          name: tenant.name,
+          email_address: tenant.email_address,
+          unit: tenant.unit,
+          monthly_rent: String(tenant.monthly_rent),
+          phone_number: tenant.phone_number,
+          lease_start_date: tenant.lease_start_date,
+        }
+      : undefined,
   });
 
   const { addTenantMutation } = useAddTenantMutation();
-  const { updateTenantByIdMutation } = useUpdateTenantByIdMutation(tenant?.id || "");
+  const { updateTenantByIdMutation } = useUpdateTenantByIdMutation(
+    tenant?.id || "",
+  );
 
   const onSubmit = (data: AddTenantFormValues) => {
     if (tenant) {
@@ -57,29 +63,29 @@ const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
     }
   };
   const formattedDate = tenant?.lease_start_date
-  ? new Date(tenant.lease_start_date).toISOString().split("T")[0]
-  : "";
+    ? new Date(tenant.lease_start_date).toISOString().split("T")[0]
+    : "";
 
   const getButtonText = () => {
-    if (addTenantMutation.isPending || updateTenantByIdMutation.isPending) return "Saving...";
+    if (addTenantMutation.isPending || updateTenantByIdMutation.isPending)
+      return "Saving...";
     return tenant ? "Save Changes" : "Add Tenant";
   };
 
-
-
   useEffect(() => {
-  if (tenant) {
-    reset({
-      name: tenant.name,
-      unit: tenant.unit,
-      monthly_rent: String(tenant.monthly_rent),
-      phone_number: tenant.phone_number,
-      lease_start_date: tenant.lease_start_date
-        ? new Date(tenant.lease_start_date).toISOString().split("T")[0]
-        : "",
-    });
-  }
-}, [tenant, reset]);
+    if (tenant) {
+      reset({
+        name: tenant.name,
+        email_address: tenant.email_address,
+        unit: tenant.unit,
+        monthly_rent: String(tenant.monthly_rent),
+        phone_number: tenant.phone_number,
+        lease_start_date: tenant.lease_start_date
+          ? new Date(tenant.lease_start_date).toISOString().split("T")[0]
+          : "",
+      });
+    }
+  }, [tenant, reset]);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 bg-opacity-50">
@@ -97,9 +103,25 @@ const AddTenant = ({ onClose, title, tenant }: AddTenantProps) => {
                 className="w-full p-2 border border-gray-300 rounded"
                 {...register("name")}
                 defaultValue={tenant?.name}
-              />             
+              />
               {errors.name && (
                 <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="email-address" className="font-semibold">
+                Email Address
+              </label>
+              <input
+                id="email-address"
+                type="email"
+                placeholder="Email Address"
+                className="w-full p-2 border border-gray-300 rounded"
+                {...register("email_address")}
+                defaultValue={tenant?.email_address}
+              />
+              {errors.email_address && (
+                <p className="text-red-500 text-sm">{errors.email_address.message}</p>
               )}
             </div>
             <div>
