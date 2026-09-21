@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e:login": ".\\.venv\\Scripts\\python -m pytest tests/e2e_py/test_login.py -v",
+    "test:e2e:login:watch": ".\\.venv\\Scripts\\python -m pytest tests/e2e_py/test_login.py -v --headed --slowmo 2000"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
